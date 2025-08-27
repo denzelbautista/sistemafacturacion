@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Boletas</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Estilos personalizados y configuración de Tailwind -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Colores personalizados para modo claro y oscuro */
+        :root {
+            --bg-dark: #0A192F;
+            --bg-light: #F3F4F6;
+            --card-dark: #1E293B;
+            --card-light: #FFFFFF;
+            --text-dark: #FFFFFF;
+            --text-light: #111827;
+            --text-muted-dark: #94A3B8;
+            --text-muted-light: #6B7280;
+            --accent: #64FFDA;
+            --accent-darker: #00C7A3;
+            --highlight: #E11D48;
+            /* Magenta/Rose */
+            --border-dark: #334155;
+            --border-light: #D1D5DB;
+        }
+
+        .dark {
+            --bg-primary: var(--bg-dark);
+            --bg-secondary: var(--card-dark);
+            --text-primary: var(--text-dark);
+            --text-secondary: var(--text-muted-dark);
+            --border-color: var(--border-dark);
+        }
+
+        html:not(.dark) {
+            --bg-primary: var(--bg-light);
+            --bg-secondary: var(--card-light);
+            --text-primary: var(--text-light);
+            --text-secondary: var(--text-muted-light);
+            --border-color: var(--border-light);
+        }
+
+        /* Clases de utilidad para aplicar los colores del tema */
+        .bg-primary {
+            background-color: var(--bg-primary);
+        }
+
+        .bg-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        .text-primary {
+            color: var(--text-primary);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-theme {
+            border-color: var(--border-color);
+        }
+
+        .fill-primary {
+            fill: var(--text-primary);
+        }
+
+        /* Estilos para la barra de desplazamiento */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--border-dark);
+            border-radius: 10px;
+            border: 2px solid var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--accent);
+        }
+
+        /* Transiciones suaves */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-primary text-primary antialiased">
+
+    <!-- =========== SECCIÓN DE LOGIN =========== -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md mx-auto">
+            <div class="bg-secondary shadow-2xl rounded-2xl p-8">
+                <!-- Logo -->
+                <div class="flex items-center justify-center mb-8">
+                    <svg class="h-10 w-10" style="color: var(--accent);" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="text-2xl font-bold text-primary ml-3">BoletasPRO</span>
+                </div>
+
+                <h2 class="text-3xl font-bold text-center text-primary mb-2">Bienvenido</h2>
+                <p class="text-center text-secondary mb-8">Inicia sesión para continuar</p>
+
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="username" class="text-sm font-medium text-secondary block mb-2">Usuario</label>
+                        <input type="text" id="username"
+                            class="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                            placeholder="tu.usuario" required>
+                    </div>
+                    <div>
+                        <label for="password" class="text-sm font-medium text-secondary block mb-2">Contraseña</label>
+                        <input type="password" id="password"
+                            class="w-full bg-primary border border-theme rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                            placeholder="••••••••" required>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-accent focus:ring-accent">
+                            <label for="remember-me" class="ml-2 block text-sm text-secondary">Recordarme</label>
+                        </div>
+                        <a href="#" class="text-sm font-medium" style="color: var(--accent);">¿Olvidaste tu
+                            contraseña?</a>
+                    </div>
+                    <div>
+                        <button type="submit"
+                            class="w-full text-white font-bold py-3 px-4 rounded-lg transition duration-300"
+                            style="background-color: var(--accent); color: var(--bg-dark);">
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <p class="text-center text-secondary text-sm mt-6">
+                ¿No tienes una cuenta? <a href="#" class="font-medium" style="color: var(--accent);">Regístrate</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- =========== DASHBOARD (OCULTO INICIALMENTE) =========== -->
+    <div id="dashboard" class="hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed top-0 left-0 h-full bg-secondary w-64 shadow-lg z-30 transition-transform duration-300 ease-in-out flex flex-col">
+            <!-- Logo y Toggle -->
+            <div class="flex items-center justify-between h-16 px-6 border-b border-theme flex-shrink-0">
+                <a href="#" class="flex items-center">
+                    <svg class="h-8 w-8" style="color: var(--accent);" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="ml-3 text-lg font-semibold text-primary">BoletasPRO</span>
+                </a>
+            </div>
+
+            <!-- Navegación Principal -->
+            <nav class="flex-grow mt-6 px-4">
+                <a href="#nuevas-boletas"
+                    class="nav-link active-link flex items-center py-3 px-4 rounded-lg text-primary"
+                    data-view="nuevas-boletas">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="ml-4">Nuevas Boletas</span>
+                </a>
+                <a href="#ver-boletas" class="nav-link flex items-center py-3 px-4 rounded-lg text-secondary"
+                    data-view="ver-boletas">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <span class="ml-4">Ver Boletas</span>
+                </a>
+                <div class="mt-4 pt-4 border-t border-theme">
+                    <p class="px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Administrar</p>
+                    <a href="#empresas" class="nav-link flex items-center py-3 px-4 mt-2 rounded-lg text-secondary"
+                        data-view="empresas">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span class="ml-4">Empresas</span>
+                    </a>
+                    <a href="#pedidos" class="nav-link flex items-center py-3 px-4 rounded-lg text-secondary"
+                        data-view="pedidos">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                        <span class="ml-4">Pedidos</span>
+                    </a>
+                    <a href="#destinos" class="nav-link flex items-center py-3 px-4 rounded-lg text-secondary"
+                        data-view="destinos">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span class="ml-4">Destinos</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Footer del Sidebar -->
+            <div class="flex-shrink-0 p-4 border-t border-theme">
+                <a href="#" id="logout-button"
+                    class="flex items-center w-full py-2 px-4 rounded-lg text-secondary hover:bg-red-500 hover:text-white">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span class="ml-4">Salir</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main id="main-content" class="ml-64 transition-all duration-300 ease-in-out">
+            <!-- Header -->
+            <header
+                class="sticky top-0 bg-primary/80 backdrop-blur-sm h-16 flex items-center justify-between px-6 z-20 border-b border-theme">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="p-2 rounded-full text-secondary hover:bg-secondary">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h1 id="view-title" class="text-xl font-semibold text-primary ml-4">Nuevas Boletas</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Toggle de Tema -->
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-secondary" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <label for="theme-toggle" class="relative inline-flex items-center cursor-pointer mx-2">
+                            <input type="checkbox" value="" id="theme-toggle" class="sr-only peer">
+                            <div
+                                class="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent">
+                            </div>
+                        </label>
+                        <svg class="w-6 h-6 text-secondary" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </div>
+                    <!-- Perfil de usuario -->
+                    <div class="relative">
+                        <button class="flex items-center space-x-2">
+                            <img class="h-9 w-9 rounded-full object-cover"
+                                src="https://placehold.co/100x100/64FFDA/0A192F?text=U" alt="User avatar">
+                            <span class="hidden md:block font-medium text-primary">Usuario</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Vistas de Contenido -->
+            <div class="p-4 md:p-8">
+                <!-- Vista: Nuevas Boletas -->
+                <div id="view-nuevas-boletas" class="content-view">
+                    <div class="bg-secondary rounded-xl shadow-md overflow-x-auto">
+                        <table class="w-full text-sm text-left text-secondary">
+                            <thead class="text-xs text-primary uppercase bg-primary/50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Empresa</th>
+                                    <th scope="col" class="px-6 py-3">Cantidad</th>
+                                    <th scope="col" class="px-6 py-3">Pedido</th>
+                                    <th scope="col" class="px-6 py-3">Destino</th>
+                                    <th scope="col" class="px-6 py-3">Precio</th>
+                                    <th scope="col" class="px-6 py-3">Código</th>
+                                    <th scope="col" class="px-6 py-3 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="boletas-table-body">
+                                <tr class="boleta-row border-b border-theme">
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="w-full bg-primary border border-theme rounded-md px-2 py-2 text-primary focus:outline-none focus:ring-1 focus:ring-accent">
+                                            <option>Empresa A</option>
+                                            <option>Empresa B</option>
+                                            <option>Empresa C</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4"><input type="number" min="1" value="1"
+                                            class="w-20 bg-primary border border-theme rounded-md px-2 py-2 text-primary focus:outline-none focus:ring-1 focus:ring-accent">
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="w-full bg-primary border border-theme rounded-md px-2 py-2 text-primary focus:outline-none focus:ring-1 focus:ring-accent">
+                                            <option>Paquete</option>
+                                            <option>Caja</option>
+                                            <option>Sobre</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <select
+                                            class="w-full bg-primary border border-theme rounded-md px-2 py-2 text-primary focus:outline-none focus:ring-1 focus:ring-accent">
+                                            <option>Lima</option>
+                                            <option>Piura</option>
+                                            <option>Arequipa</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4"><input type="number" step="0.01" placeholder="0.00"
+                                            class="w-24 bg-primary border border-theme rounded-md px-2 py-2 text-primary focus:outline-none focus:ring-1 focus:ring-accent">
+                                    </td>
+                                    <td class="px-6 py-4 font-mono text-primary">CODE-A</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <button
+                                            class="delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10">
+                                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button id="add-boleta-row"
+                            class="w-full flex items-center justify-center py-4 text-secondary hover:text-accent hover:bg-accent/10 transition-colors duration-200">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span class="ml-2 font-semibold">Agregar Fila</span>
+                        </button>
+                    </div>
+                    <div class="mt-8 flex justify-end">
+                        <button class="text-white font-bold py-3 px-8 rounded-lg transition duration-300"
+                            style="background-color: var(--accent); color: var(--bg-dark);">Generar Boletas</button>
+                    </div>
+                </div>
+
+                <!-- Vista: Ver Boletas (Placeholder) -->
+                <div id="view-ver-boletas" class="content-view hidden">
+                    <div class="bg-secondary p-8 rounded-xl shadow-md text-center">
+                        <h2 class="text-2xl font-bold text-primary mb-4">Historial de Boletas</h2>
+                        <p class="text-secondary">Aquí se mostrará una lista de las boletas generadas anteriormente.</p>
+                    </div>
+                </div>
+
+                <!-- Vista: Empresas -->
+                <div id="view-empresas" class="content-view hidden">
+                    <div class="bg-secondary rounded-xl shadow-md">
+                        <div class="p-4 flex justify-between items-center border-b border-theme">
+                            <h3 class="text-lg font-semibold">Gestionar Empresas</h3>
+                            <div class="space-x-2">
+                                <button
+                                    class="management-edit-btn text-secondary hover:text-accent p-2 rounded-md border border-theme hover:border-accent">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" />
+                                    </svg>
+                                </button>
+                                <button class="management-save-btn hidden text-white p-2 rounded-md"
+                                    style="background-color: var(--accent); color: var(--bg-dark);">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="management-table w-full text-sm text-left text-secondary"
+                                data-table-id="empresas">
+                                <thead class="text-xs text-primary uppercase bg-primary/50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Empresa</th>
+                                        <th scope="col" class="px-6 py-3">Código</th>
+                                        <th scope="col" class="px-6 py-3 management-action-col hidden text-center">
+                                            Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Transportes Rápidos
+                                            S.A.C.</td>
+                                        <td class="px-6 py-4" contenteditable="false">TR-SAC</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center">
+                                            <button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Logística del Norte
+                                            E.I.R.L.</td>
+                                        <td class="px-6 py-4" contenteditable="false">LN-EIRL</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center">
+                                            <button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button
+                            class="management-add-row-btn hidden w-full flex items-center justify-center py-4 text-secondary hover:text-accent hover:bg-accent/10 transition-colors duration-200">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span class="ml-2 font-semibold">Agregar Empresa</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vista: Pedidos -->
+                <div id="view-pedidos" class="content-view hidden">
+                    <div class="bg-secondary rounded-xl shadow-md max-w-2xl mx-auto">
+                        <div class="p-4 flex justify-between items-center border-b border-theme">
+                            <h3 class="text-lg font-semibold">Gestionar Tipos de Pedido</h3>
+                            <div class="space-x-2">
+                                <button
+                                    class="management-edit-btn text-secondary hover:text-accent p-2 rounded-md border border-theme hover:border-accent">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" />
+                                    </svg>
+                                </button>
+                                <button class="management-save-btn hidden text-white p-2 rounded-md"
+                                    style="background-color: var(--accent); color: var(--bg-dark);">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="management-table w-full text-sm text-left text-secondary"
+                                data-table-id="pedidos">
+                                <thead class="text-xs text-primary uppercase bg-primary/50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Nombre del Pedido</th>
+                                        <th scope="col" class="px-6 py-3 management-action-col hidden text-center">
+                                            Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Paquete</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center"><button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10"><svg
+                                                    class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg></button></td>
+                                    </tr>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Caja</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center"><button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10"><svg
+                                                    class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg></button></td>
+                                    </tr>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Sobre</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center"><button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10"><svg
+                                                    class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button
+                            class="management-add-row-btn hidden w-full flex items-center justify-center py-4 text-secondary hover:text-accent hover:bg-accent/10 transition-colors duration-200">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span class="ml-2 font-semibold">Agregar Tipo de Pedido</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vista: Destinos -->
+                <div id="view-destinos" class="content-view hidden">
+                    <div class="bg-secondary rounded-xl shadow-md max-w-2xl mx-auto">
+                        <div class="p-4 flex justify-between items-center border-b border-theme">
+                            <h3 class="text-lg font-semibold">Gestionar Destinos</h3>
+                            <div class="space-x-2">
+                                <button
+                                    class="management-edit-btn text-secondary hover:text-accent p-2 rounded-md border border-theme hover:border-accent">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" />
+                                    </svg>
+                                </button>
+                                <button class="management-save-btn hidden text-white p-2 rounded-md"
+                                    style="background-color: var(--accent); color: var(--bg-dark);">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="management-table w-full text-sm text-left text-secondary"
+                                data-table-id="destinos">
+                                <thead class="text-xs text-primary uppercase bg-primary/50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Nombre del Destino</th>
+                                        <th scope="col" class="px-6 py-3 management-action-col hidden text-center">
+                                            Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Lima</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center"><button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10"><svg
+                                                    class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg></button></td>
+                                    </tr>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Piura</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center"><button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10"><svg
+                                                    class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg></button></td>
+                                    </tr>
+                                    <tr class="border-b border-theme">
+                                        <td class="px-6 py-4 text-primary" contenteditable="false">Arequipa</td>
+                                        <td class="px-6 py-4 management-action-col hidden text-center"><button
+                                                class="management-delete-row-btn p-2 text-secondary hover:text-red-500 rounded-full hover:bg-red-500/10"><svg
+                                                    class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button
+                            class="management-add-row-btn hidden w-full flex items-center justify-center py-4 text-secondary hover:text-accent hover:bg-accent/10 transition-colors duration-200">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            <span class="ml-2 font-semibold">Agregar Destino</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ELEMENTOS DEL DOM ---
+            const loginPage = document.getElementById('login-page');
+            const loginForm = document.getElementById('login-form');
+            const dashboard = document.getElementById('dashboard');
+            const logoutButton = document.getElementById('logout-button');
+
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const mainContent = document.getElementById('main-content');
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentViews = document.querySelectorAll('.content-view');
+            const viewTitle = document.getElementById('view-title');
+
+            const themeToggle = document.getElementById('theme-toggle');
+
+            const addBoletaRowBtn = document.getElementById('add-boleta-row');
+            const boletasTableBody = document.getElementById('boletas-table-body');
+
+            const managementEditBtns = document.querySelectorAll('.management-edit-btn');
+
+            // --- LÓGICA DE LOGIN Y LOGOUT ---
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Aquí iría tu lógica de autenticación.
+                // Por ahora, solo simulamos un inicio de sesión exitoso.
+                loginPage.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+            });
+
+            logoutButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Aquí iría tu lógica para limpiar la sesión.
+                dashboard.classList.add('hidden');
+                loginPage.classList.remove('hidden');
+            });
+
+            // --- LÓGICA DEL SIDEBAR Y NAVEGACIÓN ---
+            sidebarToggle.addEventListener('click', () => {
+                // Oculta completamente la sidebar moviéndola fuera de la pantalla
+                sidebar.classList.toggle('-translate-x-full');
+
+                // Ajusta el margen del contenido principal para que ocupe el espacio liberado
+                mainContent.classList.toggle('ml-64');
+                mainContent.classList.toggle('ml-0');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const viewId = link.dataset.view;
+
+                    // Actualizar enlace activo
+                    navLinks.forEach(l => l.classList.remove('active-link'));
+                    link.classList.add('active-link');
+
+                    // Cambiar de vista
+                    contentViews.forEach(view => {
+                        if (view.id === `view-${viewId}`) {
+                            view.classList.remove('hidden');
+                        } else {
+                            view.classList.add('hidden');
+                        }
+                    });
+
+                    // Actualizar título
+                    viewTitle.textContent = link.querySelector('span').textContent;
+                });
+            });
+
+            // Estilo para el link activo
+            const style = document.createElement('style');
+            style.innerHTML = `
+            .active-link {
+                background-color: var(--accent);
+                color: var(--bg-dark) !important;
+            }
+            .active-link svg {
+                color: var(--bg-dark) !important;
+            }
+        `;
+            document.head.appendChild(style);
+
+            // --- LÓGICA DEL TEMA (MODO OSCURO/CLARO) ---
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                themeToggle.checked = false;
+            } else {
+                document.documentElement.classList.add('dark');
+                themeToggle.checked = true;
+            }
+
+            themeToggle.addEventListener('change', () => {
+                if (themeToggle.checked) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // --- LÓGICA DE LA TABLA DE BOLETAS ---
+            addBoletaRowBtn.addEventListener('click', () => {
+                const firstRow = boletasTableBody.querySelector('.boleta-row');
+                if (firstRow) {
+                    const newRow = firstRow.cloneNode(true);
+                    // Limpiar los valores de los inputs en la nueva fila
+                    newRow.querySelectorAll('input, select').forEach(input => {
+                        if (input.type === 'number') input.value = '';
+                        else if (input.tagName.toLowerCase() === 'select') input.selectedIndex = 0;
+                    });
+                    newRow.querySelector('.font-mono').textContent = '...'; // Limpiar código
+                    boletasTableBody.appendChild(newRow);
+                }
+            });
+
+            boletasTableBody.addEventListener('click', (e) => {
+                const deleteBtn = e.target.closest('.delete-row-btn');
+                if (deleteBtn) {
+                    // No eliminar la última fila
+                    if (boletasTableBody.querySelectorAll('.boleta-row').length > 1) {
+                        deleteBtn.closest('.boleta-row').remove();
+                    } else {
+                        // Opcional: mostrar un mensaje de que no se puede eliminar la última fila
+                        console.log("No se puede eliminar la única fila.");
+                    }
+                }
+            });
+
+            // --- LÓGICA DE LAS TABLAS DE GESTIÓN (EMPRESAS, PEDIDOS, ETC.) ---
+            managementEditBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const container = btn.closest('.content-view');
+                    const table = container.querySelector('.management-table');
+                    const saveBtn = container.querySelector('.management-save-btn');
+                    const addRowBtn = container.querySelector('.management-add-row-btn');
+                    const actionCols = container.querySelectorAll('.management-action-col');
+                    const cells = table.querySelectorAll('td[contenteditable]');
+
+                    // Alternar estado de edición
+                    const isEditing = btn.dataset.editing === 'true';
+
+                    btn.dataset.editing = !isEditing;
+                    btn.classList.toggle('hidden');
+                    saveBtn.classList.toggle('hidden');
+                    addRowBtn.classList.toggle('hidden');
+
+                    actionCols.forEach(col => col.classList.toggle('hidden'));
+
+                    cells.forEach(cell => {
+                        cell.setAttribute('contenteditable', !isEditing);
+                        cell.classList.toggle('bg-primary/50');
+                        cell.classList.toggle('ring-1');
+                        cell.classList.toggle('ring-accent');
+                    });
+
+                    if (!isEditing) {
+                        // Entrando en modo edición, enfocar la primera celda
+                        if (cells.length > 0) cells[0].focus();
+                    }
+
+                    // El botón de guardar haría la lógica inversa
+                    saveBtn.addEventListener('click', () => {
+                        btn.click(); // Simular clic en el botón de editar para salir del modo
+                        // Aquí iría la lógica para guardar los datos en la base de datos
+                        console.log(`Guardando cambios para la tabla: ${table.dataset.tableId}`);
+                    }, { once: true }); // El listener se ejecuta solo una vez
+                });
+            });
+
+            // Lógica para agregar filas en tablas de gestión
+            document.querySelectorAll('.management-add-row-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const container = btn.closest('.content-view');
+                    const tableBody = container.querySelector('tbody');
+                    const firstRow = tableBody.querySelector('tr');
+                    if (firstRow) {
+                        const newRow = firstRow.cloneNode(true);
+                        newRow.querySelectorAll('td[contenteditable]').forEach(cell => {
+                            cell.textContent = ''; // Limpiar contenido
+                            cell.setAttribute('contenteditable', 'true'); // Asegurarse de que sea editable
+                            cell.classList.add('bg-primary/50', 'ring-1', 'ring-accent');
+                        });
+                        // Mostrar las acciones en la nueva fila
+                        newRow.querySelector('.management-action-col').classList.remove('hidden');
+                        tableBody.appendChild(newRow);
+                        newRow.querySelector('td[contenteditable]').focus();
+                    }
+                });
+            });
+
+            // Lógica para eliminar filas en tablas de gestión
+            document.querySelectorAll('.management-table tbody').forEach(tbody => {
+                tbody.addEventListener('click', e => {
+                    const deleteBtn = e.target.closest('.management-delete-row-btn');
+                    if (deleteBtn) {
+                        deleteBtn.closest('tr').remove();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
